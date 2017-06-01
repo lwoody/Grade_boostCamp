@@ -23,32 +23,15 @@ for data in json{
     
 }
 
-// 각 출력값을 result string에 저장
-var result : String = ""
-result+="성적결과표\n"
-
-//전체 평균
-var sum : Double = 0
-var count : Double = 0
-for grade in personList.values{
-    for score in grade.values{
-        count+=1
-        sum+=score
-    }
-}
-
-let multiplier = pow(10.0, 2.0)
-
-result+="\n전체 평균 : \(round(sum/count*multiplier)/multiplier)\n" // 소수점 두자리 수까지
-
-//개인별 학점
+//학생데이터 배열, 졸업명단 배열, 평균값 계산 준비
 var personData : Dictionary<String,String> = [:] // 이름 : 학점
 var graduatedList : Array<String> = [] // 수료생 명단
+var meanSum : Double = 0 // 각 학생의 평균 점수 합
 
 for person in personList{
     
     var sum : Double = 0
-    var count : Double = 0
+    var count : Double = 0 // 학생별 과목 개수
     var grade : String = ""
     graduatedList.append(person.key)
     
@@ -59,6 +42,7 @@ for person in personList{
     }
     
     let mean : Double = sum/count
+    meanSum+=mean // 각 학생의 평균 점수 합하기
     
     if(mean>=90&&mean<=100){
         grade = "A"
@@ -82,8 +66,16 @@ for person in personList{
     
 }
 
-result+="\n개인별 학점\n"
+// 각 출력값을 result string에 저장
+var result : String = ""
+result+="성적결과표\n"
 
+//전체 학생의 평균
+let multiplier = pow(10.0, 2.0)
+result+="\n전체 평균 : \(round(meanSum/Double(personList.count)*multiplier)/multiplier)\n" // 소수점 두자리 수까지
+
+//개인별 학점
+result+="\n개인별 학점\n"
 for person in personData.sorted(by: { $0.0 < $1.0 }){ //abc내림차순(key값인 이름 기준)
     result+="\(person.key) \t: \(person.value)\n"
 }
